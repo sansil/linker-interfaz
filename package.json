@@ -11,8 +11,10 @@
     "axios": "^0.18.0",
     "bulma": "^0.7.2",
     "bulma-extensions": "^4.1.0",
+    "socket.io-client": "^2.2.0",
     "vue": "^2.5.22",
     "vue-router": "^3.0.1",
+    "vue-socket.io": "^3.0.5",
     "vue-spinner": "^1.0.3",
     "vuex": "^3.0.1"
   },
