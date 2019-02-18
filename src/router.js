@@ -13,13 +13,12 @@ export default new Router({
       component: Conectar
     },
     {
-      path: "/conectado",
-      name: "conectado",
+      path: "/log",
+      name: "log",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./views/Conectado.vue")
+      component: () => import(/* webpackChunkName: "about" */ "./views/Log.vue")
     }
   ]
 });

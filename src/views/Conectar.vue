@@ -2,6 +2,7 @@
   <div class="mark-app">
     <div class="contendor-app-ppal"></div>
     <div class="backround-color-ppal"></div>
+    <p>{{log}}</p>
     <div class="loader-cont" v-if="loading">
       <div class="mark-loader"></div>
       <div class="spinner">
@@ -65,7 +66,8 @@ export default {
       puerto: "",
       loading: false,
       conectado: false,
-      checked: false
+      checked: false,
+      log: ""
     };
   },
   sockets: {
@@ -76,6 +78,10 @@ export default {
       console.log(data);
       this.loading = false;
       this.conectado = false;
+    },
+    log: function(data) {
+      console.log(data);
+      this.log = data.log + "\n\r" + this.log;
     }
   },
   methods: {

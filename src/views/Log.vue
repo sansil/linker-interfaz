@@ -1,6 +1,7 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>LOG Linker</h1>
+    <p>{{log}}</p>
   </div>
 </template>
 
@@ -10,8 +11,19 @@
 
 export default {
   name: "about",
+  data() {
+    return {
+      log: ""
+    };
+  },
   components: {
     // HelloWorld
+  },
+  sockets: {
+    log: function(data) {
+      console.log(data);
+      this.log = data.log + "\n\r" + this.log;
+    }
   }
 };
 </script>
