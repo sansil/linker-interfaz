@@ -2,7 +2,7 @@
   <div class="mark-app">
     <div class="contendor-app-ppal"></div>
     <div class="backround-color-ppal"></div>
-    <p>{{log}}</p>
+    <!-- <p>{{log}}</p> -->
     <div class="loader-cont" v-if="loading">
       <div class="mark-loader"></div>
       <div class="spinner">
