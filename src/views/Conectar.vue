@@ -25,9 +25,32 @@
     <div class="contenido">
       <!-- <drop-down></drop-down> -->
       <div class="m-input w3-border" v-if="!conectado && !loading">
-        <input type="text" placeholder="ESCRIBIR PUERTO" v-model="puerto" :disabled="!checked">
+        <!-- <input type="text" placeholder="ESCRIBIR PUERTO" v-model="puerto" :disabled="!checked">-->
+        <a
+          @click="onGetPuertos"
+          :class="class_load_port"
+          style="border-radius:0;"
+          :disabled="!checked"
+        >
+          <img src="@/assets/sinchronize-48.png" alt style="max-width: 2rem; color: white;">
+        </a>
+        <transition name="vuebulmaselect-slide-fade">
+          <div class="select">
+            <select
+              class="is-hovered"
+              style="border-radius:0; min-width: 10rem;"
+              :disabled="!checked"
+              v-model="selectedPort"
+            >
+              <option>Seleccionar puerto</option>
+              <option v-for="(port, index) in portList" :key="index">{{port.comName}}</option>
+            </select>
+          </div>
+        </transition>
+
         <a @click="onConectar" class="button is-info is-outlined" style="border-radius:0;">CONECTAR</a>
       </div>
+
       <div class="conectado" v-if="conectado">
         <section class="hero">
           <div class="hero-body">
@@ -53,12 +76,14 @@ require("@/assets/sass/main.scss");
 
 // import DropDown from '@/components/DropDown.vue';
 import axios from "axios";
+//import selectCustom from "@/components/SelectCustom.vue";
 import RiseLoader from "vue-spinner/src/RiseLoader.vue";
 
 export default {
   name: "conectar",
   components: {
     // DropDown
+    //selectCustom,
     RiseLoader
   },
   data() {
@@ -67,8 +92,14 @@ export default {
       loading: false,
       conectado: false,
       checked: false,
-      log: ""
+      log: "",
+      portList: [],
+      class_load_port: "button is-info is-outlined",
+      selectedPort: ""
     };
+  },
+  mounted() {
+    this.selectedPort = "Seleccionar puerto";
   },
   sockets: {
     connect: function() {
@@ -78,6 +109,21 @@ export default {
       console.log(data);
       this.loading = false;
       this.conectado = false;
+    },
+    getPuertosCom: function(data) {
+      console.log(data);
+      // data.puertos = [
+      //   {
+      //     manufacturer: "Arduino (www.arduino.cc)",
+      //     serialNumber: "55735323635351F0C201",
+      //     pnpId: "usb-Arduino__www.arduino.cc__0043_55735323635351F0C201-if00",
+      //     locationId: undefined,
+      //     vendorId: "2341",
+      //     productId: "0043",
+      //     comName: "/dev/ttyACM0"
+      //   }
+      // ];
+      this.portList = data.puertos;
     },
     log: function(data) {
       console.log(data);
@@ -100,7 +146,7 @@ export default {
     onConectar() {
       console.log("conectando");
       this.loading = true;
-      var connection_port = this.puerto;
+      var connection_port = this.selectedPort;
       if (!this.checked) connection_port = "";
       axios
         .post("http://localhost:8081/conectar", {
@@ -114,6 +160,11 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+    },
+    onGetPuertos() {
+      console.log(this.selectedPort);
+      //this.class_load_port = "button is-info is-outlined is-loading";
+      this.$socket.emit("getPuertosCom", {});
     }
   }
 };
@@ -228,5 +279,16 @@ a {
   box-shadow: none;
   outline-color: #009de8;
   /* border-radius: 0.5rem; */
+}
+
+.vuebulmaselect-slide-fade enter-active {
+  transition: all 0.2s ease;
+}
+.vuebulmaselect-slide-fade enter leave-active {
+  padding-top: 10px;
+  opacity: 0;
+}
+.vuebulmaselect-slide-fade leave-active {
+  transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
 }
 </style>
